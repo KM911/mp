@@ -79,7 +79,6 @@ func ReadFromStream() (src string) {
 	src = strings.ToUpper(strings.TrimSpace(string(all)))
 	fmt.Println("pipe is ", src)
 	return src
-
 }
 func SetUserPath(value string) {
 	userPath := QueryUserVariable("PATH")

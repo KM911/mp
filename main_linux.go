@@ -2,23 +2,24 @@ package main
 
 import (
 	"fmt"
-	"github.com/KM911/oslib/fs"
 	"io"
 	"os"
+	"github.com/KM911/oslib/fs"
 	"path/filepath"
 	"strings"
 )
 
 // check the path is valid and return command
+// linux path is case-sensitive
 var (
 	SRC = ".profile"
 )
 
-if !fs.IsExit(src) {
-	fmt.Println("path is not exits")
-	func CheckPath(src string) string {
-	//EmitError(2, "path is not exits")
-	os.Exit(-1)
+func CheckPath(src string) string {
+	if !fs.IsExit(src) {
+		fmt.Println("path is not exits")
+		//EmitError(2, "path is not exits")
+		os.Exit(-1)
 	}
 	if IsInPath(src) {
 		// do not need to add
@@ -44,18 +45,17 @@ func ReadFromStream() (src string) {
 	src = strings.TrimSpace(string(all))
 	fmt.Println("pipe is ", src)
 	return src
-
 }
 
 // 向profile文件中写入数据
 func ModifyEnvironment(data string) {
 	SRC = filepath.Join(os.Getenv("HOME"), SRC)
-	src, err := os.OpenFile(SRC, os.O_APPEND|os.O_WRONLY, 0644)
+	file, err := os.OpenFile(SRC, os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		return
 	}
-	defer src.Close()
-	_, err = fmt.Fprintf(src, data)
+	defer file.Close()
+	_, err = fmt.Fprintf(file, data)
 	if err != nil {
 		EmitError(1, "write file error")
 	}

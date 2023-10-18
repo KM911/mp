@@ -20,14 +20,6 @@ t3:
 # flag can not be add at the last
 # we could just create by ourself
 
-
-
-
-
-
-
-
-
 linux:
 	set  GOOS=linux
 	go build -ldflags "-s -w" -o $(project)
