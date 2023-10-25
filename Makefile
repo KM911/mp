@@ -59,7 +59,7 @@ callvis-install:
 	go install github.com/ofabry/go-callvis@master
 
 callvis:
-	go-callvis main.go
+	go-callvis .
 
 proxy:
 	go env -w  GOPROXY=https://goproxy.io,direct

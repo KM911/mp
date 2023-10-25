@@ -64,8 +64,8 @@ func IsInPath(src string) bool {
 
 func ParseUserInput() {
 	ArgsLens := len(flag.Args())
-	fmt.Println("args lens is ", ArgsLens)
-	fmt.Println("args is ", flag.Args())
+	//fmt.Println("args lens is ", ArgsLens)
+	//fmt.Println("args is ", flag.Args())
 	// 关于 flag的解析 问题
 	switch ArgsLens {
 	case 0:
@@ -81,15 +81,17 @@ func ParseUserInput() {
 
 func HelpInfo() {
 	fmt.Println(APP_NAME + " useage is \n")
-	fmt.Println("pwd | " + APP_NAME + "  add path from pipe")
-	fmt.Println(APP_NAME + " [path]")
-	fmt.Println(APP_NAME + " [key] [value]")
+	fmt.Println("Add current folder to environment path")
+	fmt.Println("	pwd | " + APP_NAME + "    add path by pipeline")
+	fmt.Println("Add path by args")
+	fmt.Println("	", APP_NAME+" [path]")
+	fmt.Println("	", APP_NAME+" [key] [value]")
 }
 func Reminder() {
 	time.Sleep(1 * time.Second)
 	HelpInfo()
-	EmitError(3, "without pipe")
-
+	os.Exit(0)
+	//EmitError(3, "without pipe")
 }
 
 func init() {
