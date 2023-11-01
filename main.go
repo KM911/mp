@@ -19,7 +19,7 @@ type ErrorMessage struct {
 }
 
 func FileLogger(src string) {
-	logFile, err := os.OpenFile(src, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0766)
+	logFile, err := os.OpenFile(src, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
 	if err != nil {
 		panic(err)
 	}
@@ -52,7 +52,7 @@ func ErrorHandler(err ErrorMessage) {
 var (
 	APP_NAME = "mp" // manage profile
 	Export   = false
-	HELP     = "mp is a tool for managing environment path."
+	HELP     = "mp is a tool for managing environment path. You need to restart the terminal to take effect."
 	USAGE    = `Usage: 
     pwd | mp             add current folder into env PATH
     mp  [value]          add value into env PATH

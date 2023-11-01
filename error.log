@@ -1,0 +1,32 @@
+2023/11/01 15:58:07 goroutine 1 [running]:
+runtime/debug.Stack()
+	/mnt/d/DOWNLOAD/linux/go/src/runtime/debug/stack.go:24 +0x5e
+main.Recover(0x4f8f38)
+	/mnt/d/CODE/go/mp/main.go:40 +0x5b
+panic({0x4dc3a0?, 0xc000012120?})
+	/mnt/d/DOWNLOAD/linux/go/src/runtime/panic.go:914 +0x21f
+main.EmitError(...)
+	/mnt/d/CODE/go/mp/main.go:31
+main.CheckPath({0xc00001a108, 0x11})
+	/mnt/d/CODE/go/mp/main_linux.go:26 +0x107
+main.ParseUserInput()
+	/mnt/d/CODE/go/mp/main.go:72 +0xb6
+main.main()
+	/mnt/d/CODE/go/mp/main.go:108 +0xc9
+
+2023/11/01 16:26:33 goroutine 1 [running]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x65
+main.Recover(0x4eea60)
+	/mnt/d/CODE/go/mp/main.go:39 +0x58
+panic({0x4d4aa0, 0xc00000e150})
+	/usr/local/go/src/runtime/panic.go:838 +0x207
+main.EmitError(...)
+	/mnt/d/CODE/go/mp/main.go:30
+main.CheckPath({0xc000014180, 0x11})
+	/mnt/d/CODE/go/mp/main_linux.go:24 +0xcb
+main.ParseUserInput()
+	/mnt/d/CODE/go/mp/main.go:74 +0xb6
+main.main()
+	/mnt/d/CODE/go/mp/main.go:109 +0xd8
+
