@@ -19,7 +19,6 @@ type ErrorMessage struct {
 }
 
 func FileLogger(src string) {
-
 	logFile, err := os.OpenFile(src, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0766)
 	if err != nil {
 		panic(err)
@@ -43,15 +42,21 @@ func Recover(errorHandler func(ErrorMessage)) {
 
 // TODO add error message
 func ErrorHandler(err ErrorMessage) {
+	fmt.Println("error exit with code ", err.Type)
 	switch err.Type {
 	default:
-		fmt.Println(err.Type, err.Msg)
+		fmt.Println(err.Msg)
 	}
 }
 
 var (
 	APP_NAME = "mp" // manage profile
 	Export   = false
+	HELP     = "mp is a tool for managing environment path."
+	USAGE    = `Usage: 
+    pwd | mp             add current folder into env PATH
+    mp  [value]          add value into env PATH
+    mp  [key] [value]    add env key=value`
 )
 
 func IsInPath(src string) bool {
@@ -64,9 +69,6 @@ func IsInPath(src string) bool {
 
 func ParseUserInput() {
 	ArgsLens := len(flag.Args())
-	//fmt.Println("args lens is ", ArgsLens)
-	//fmt.Println("args is ", flag.Args())
-	// 关于 flag的解析 问题
 	switch ArgsLens {
 	case 0:
 		ModifyEnvironment(CheckPath(ReadFromStream()))
@@ -80,18 +82,17 @@ func ParseUserInput() {
 }
 
 func HelpInfo() {
-	fmt.Println(APP_NAME + " useage is \n")
-	fmt.Println("Add current folder to environment path")
-	fmt.Println("	pwd | " + APP_NAME + "    add path by pipeline")
-	fmt.Println("Add path by args")
-	fmt.Println("	", APP_NAME+" [path]")
-	fmt.Println("	", APP_NAME+" [key] [value]")
+	fmt.Println(HELP)
+	fmt.Println()
+	fmt.Println(USAGE)
+	fmt.Println()
 }
+
 func Reminder() {
 	time.Sleep(1 * time.Second)
 	HelpInfo()
+	CleanPath()
 	os.Exit(0)
-	//EmitError(3, "without pipe")
 }
 
 func init() {
@@ -106,5 +107,4 @@ func main() {
 	defer adt.TimerStart().End()
 	defer Recover(ErrorHandler)
 	ParseUserInput()
-	//fmt.Println(QueryUserPath())
 }

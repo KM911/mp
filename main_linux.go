@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/KM911/oslib/fs"
 	"io"
 	"os"
-	"github.com/KM911/oslib/fs"
 	"path/filepath"
 	"strings"
 )
@@ -50,7 +50,7 @@ func ReadFromStream() (src string) {
 // 向profile文件中写入数据
 func ModifyEnvironment(data string) {
 	SRC = filepath.Join(os.Getenv("HOME"), SRC)
-	file, err := os.OpenFile(SRC, os.O_APPEND|os.O_WRONLY, 0644)
+	file, err := os.OpenFile(SRC, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		return
 	}

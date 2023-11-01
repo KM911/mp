@@ -7,7 +7,6 @@ import (
 	"github.com/KM911/oslib/fs"
 	"io"
 	"os"
-	"path/filepath"
 	"sort"
 	"strings"
 )
@@ -27,22 +26,12 @@ var (
 // 修改reg来修改环境变量
 func ModifyEnvironment(data string) {
 	SetUserPath(data)
-	//fmt.Println("Modify argv is", data)
 }
-
-//func IsInPath(src string) bool {
-//	// TODO 判读是否存在的环境变量
-//	index := strings.Index(QueryUserPath(), src)
-//	if index == -1 {
-//		return false
-//	}
-//	return true
-//}
 
 // 我们默认也是添加到用户的环境变量中 这样主要是可以避免权限问题
 
 func CheckPath(src string) string {
-	src = filepath.ToSlash(src)
+	//src = filepath.ToSlash(src)
 	src = strings.ToUpper(src)
 	if Export {
 		ExportPath(src)
@@ -52,14 +41,14 @@ func CheckPath(src string) string {
 		fmt.Println(src, " is not exits")
 		os.Exit(2)
 	}
+	// TODO toml
 	if strings.HasSuffix(src, ".mp") || strings.HasSuffix(src, ".MP") {
 		LoadFromFile(src)
 		os.Exit(0)
 	}
 	if IsInPath(src) {
-		// do not need to add
-		EmitError(4, src+" is in path")
-		os.Exit(4)
+		EmitError(4, src+" is in path , do not need to add")
+		os.Exit(0)
 	}
 	return src
 }
@@ -69,18 +58,17 @@ func CheckValue(k, v string) string {
 }
 func ReadFromStream() (src string) {
 	go Reminder()
-	// io
 	all, err := io.ReadAll(os.Stdin)
 	if err != nil {
 		fmt.Println(err.Error())
 		EmitError(1, "read from stdin error")
 		return ""
 	}
-	src = strings.ToUpper(strings.TrimSpace(string(all)))
-	fmt.Println("pipe is ", src)
+	src = strings.TrimSpace(string(all))
 	return src
 }
-func SetUserPath(value string) {
+
+func AddUserPath(value string) {
 	userPath := QueryUserVariable("PATH")
 	if IsInPath(value) {
 		return
@@ -94,12 +82,15 @@ func SetUserPath(value string) {
 		}
 	}
 	userPath = userPath[pc:]
-	fmt.Println("user path is", userPath)
 	if !strings.HasSuffix(userPath, ";") {
 		userPath = userPath + ";"
 	}
 	userPath = userPath + value
-	SetUserVaiable("PATH", userPath)
+	SetUserPath(userPath)
+}
+
+func SetUserPath(value string) {
+	SetUserVaiable("PATH", value)
 }
 
 func SetUserVaiable(k, v string) {
@@ -108,12 +99,9 @@ func SetUserVaiable(k, v string) {
 	oslib.RunStd(command)
 }
 
-func SetSystemPath(value string) {
+func SetSystemPath(value string) {}
 
-}
-
-func SetSystemVariable(k, v string) {
-}
+func SetSystemVariable(k, v string) {}
 
 func QueryUserPath() string {
 	userPath := QueryUserVariable("PATH")
@@ -153,7 +141,6 @@ func QuerySystemVariable(k string) string {
 	return word
 }
 
-//
 func LoadFromFile(src string) {
 	LoadFile(src)
 	//fmt.Println("env is", ENVIRONMENT)
@@ -189,8 +176,6 @@ func LoadFile(src string) {
 	for i := range filted_lines {
 		ParseFileContent(filted_lines[i])
 	}
-	// 原始 + 现在的
-
 	ENVIRONMENT["PATH"] = USERPATH + StringBuilder.String()
 	return
 
@@ -257,4 +242,27 @@ func ParseFileContent(line string) {
 		v := line[equalIndex+1:]
 		ENVIRONMENT[k] = strings.TrimSpace(v)
 	}
+}
+
+func CleanPath() {
+	paths := strings.Split(QueryUserPath(), ";")
+	paths = paths[:len(paths)-1]
+	// 在一个循环中删除元素应该使用迭代器
+	for i := 0; i < len(paths); i++ {
+		if !fs.IsExit(paths[i]) {
+			fmt.Println("remove not exit path :", paths[i])
+			paths = append(paths[:i], paths[i+1:]...)
+			i--
+		}
+	}
+	// 删除重复元素
+	paths = removeDuplicates(paths)
+
+	// 将path的值排序
+	sort.Strings(paths)
+	fmt.Println("Current path is ")
+	for i := range paths {
+		fmt.Println(paths[i])
+	}
+	SetUserVaiable("PATH", strings.ReplaceAll(strings.Join(paths, ";"), "/", `\`)+";")
 }
