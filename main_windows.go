@@ -25,7 +25,7 @@ var (
 
 // 修改reg来修改环境变量
 func ModifyEnvironment(data string) {
-	SetUserPath(data)
+	AddUserPath(data)
 }
 
 // 我们默认也是添加到用户的环境变量中 这样主要是可以避免权限问题
